@@ -227,8 +227,20 @@ end )
 --[[----------------------------------------------------------------------------------
 	Plate reader threads
 ----------------------------------------------------------------------------------]]--
+--added by pamela for ps-mdt
+local Vehicle = nil
+	local function GetFrontPlate()
+		local data = {
+			locked = READER.vars.cams["front"].locked,
+			plate = READER.vars.cams["front"].plate,
+			veh = Vehicle,
+		}
+		return data
+	end exports("GetFrontPlate", GetFrontPlate)
+
 -- This is the main function that runs and scans all vehicles in front and behind the patrol vehicle
-function READER:Main()
+	
+	function READER:Main()
 	-- Check that the system can actually run
 	if ( PLY:VehicleStateValid() and self:CanPerformMainTask() ) then
 		-- Loop through front (1) and rear (-1)
@@ -244,6 +256,10 @@ function READER:Main()
 
 			-- Run the ray trace to get a vehicle
 			local veh = UTIL:GetVehicleInDirection( PLY.veh, start, offset )
+				--added by pamela for ps-mdt
+				if i == 1 then
+					Vehicle = veh
+				end
 
 			-- Get the plate reader text for front/rear
 			local cam = self:GetCamFromNum( i )
